@@ -140,9 +140,8 @@ spec:
 done.
 
 Use 'kubectl apply -f TrustRoot.yaml' to deploy the TrustRoot.
-
-
-
+```
+```
 $ tree --dirsfirst --noreport
 .
 ├── repository
@@ -163,14 +162,12 @@ $ tree --dirsfirst --noreport
 ├── readme.md
 ├── repository.tgz
 └── trustroot.sh
-
-
-
+```
+```
 $ kubectl apply -f TrustRoot.yaml
 trustroot.policy.sigstore.dev/tuf-repo-cdn.sigstore.dev-1732479585 created
-
-
-
+```
+```
 $ kubectl get TrustRoot
 NAME                                   AGE
 tuf-repo-cdn.sigstore.dev-1732479585   5s
