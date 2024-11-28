@@ -73,26 +73,28 @@ for file in ${metadata}; do
   echo "done"
 done
 
-echo -e "\ncopying targets from .sigstore to repository/targets using their respective sha512:"
+echo -e "\ncopying targets from .sigstore to repository/targets using their respective sha256 and sha512:"
 
-for target in ~/.sigstore/root/targets/*; do
-  echo -n " - ${target} -> "
+for sha_alg in 256 512; do
+  for target in ~/.sigstore/root/targets/*; do
+    echo -n " - ${target} -> "
 
-  if ! out="$(shasum -a 512 "${target}" 2>&1)"; then
-    echo "Error: could not calculate sha512 for ${target}"
-    exit 1
-  fi
+    if ! out="$(shasum -a "${sha_alg}" "${target}" 2>&1)"; then
+      echo "Error: could not calculate sha${sha_alg} for ${target}"
+      exit 1
+    fi
 
-  sha="$(cut -d ' ' -f 1 <<< "${out}")"
+    sha="$(cut -d ' ' -f 1 <<< "${out}")"
 
-  dest="repository/targets/${sha}.$(basename "${target}")"
-  echo -n "${dest} ... "
+    dest="repository/targets/${sha}.$(basename "${target}")"
+    echo -n "${dest} ... "
 
-  if ! cp "${target}" "${dest}"; then
-    echo "Error: could not copy ${target} to ${dest}"
-    exit 1
-  fi
-  echo "done"
+    if ! cp "${target}" "${dest}"; then
+      echo "Error: could not copy ${target} to ${dest}"
+      exit 1
+    fi
+    echo "done"
+  done
 done
 
 echo -ne "\ncompresing repository to repository.tgz ... "
